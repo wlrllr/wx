@@ -1,10 +1,12 @@
 package com.wlrllr.wxapi;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wlrllr.config.WxProperties;
 import com.wlrllr.constants.DataConstants;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by w_zhanglong on 2017/10/27.
@@ -12,6 +14,9 @@ import org.slf4j.LoggerFactory;
 public class BaseApi {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    public WxProperties wxProperties;
 
     public JSONObject returnJson(JSONObject result) {
         if (result != null && result.getIntValue("errcode") == 0) {

@@ -44,7 +44,6 @@ public class HttpUtils {
 	private static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
 	private static PoolingHttpClientConnectionManager connMgr = null;// 连接池
 	private static HttpClientBuilder httpClientBuilder = null;// HttpClient生成器
-	private static RequestConfig requestConfig = null;// 请求配置
 	private static int MAX_TIMEOUT = 5000;// 连接超时时间(ms)
 
 	/**
@@ -66,11 +65,9 @@ public class HttpUtils {
 		configBuilder.setConnectionRequestTimeout(MAX_TIMEOUT);
 		// 在提交之前，测试连接是否可用
 		// configBuilder.setStaleConnectionCheckEnabled(true);
-		requestConfig = configBuilder.build();
-
 		httpClientBuilder = HttpClients.custom();
 		httpClientBuilder.setConnectionManager(connMgr);
-		httpClientBuilder.setDefaultRequestConfig(requestConfig);
+		httpClientBuilder.setDefaultRequestConfig(configBuilder.build());
 	}
 
 	/**

@@ -24,8 +24,6 @@ import java.util.Map;
 @Component
 public class KfManager extends BaseApi{
 
-    @Autowired
-    private WxProperties wxProperties;
 
     /**
      * 添加客服帐号
