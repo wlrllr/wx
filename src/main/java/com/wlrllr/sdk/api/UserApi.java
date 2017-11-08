@@ -3,7 +3,7 @@ package com.wlrllr.sdk.api;
 import com.alibaba.fastjson.JSONObject;
 import com.wlrllr.config.WxProperties;
 import com.wlrllr.core.bean.JSONObj;
-import com.wlrllr.util.HttpUtils;
+import com.wlrllr.sdk.util.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

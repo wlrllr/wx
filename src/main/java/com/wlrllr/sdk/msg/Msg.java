@@ -1,7 +1,7 @@
 package com.wlrllr.sdk.msg;
 
 import com.wlrllr.sdk.core.XmlField;
-import com.wlrllr.util.XmlUtils;
+import com.wlrllr.sdk.util.XmlUtils;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.wlrllr.util;
+package com.wlrllr.sdk.util;
 
 import java.io.File;
 import java.io.IOException;

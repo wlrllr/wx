@@ -2,7 +2,7 @@ package com.wlrllr.sdk.msg.out;
 
 import com.wlrllr.sdk.core.XmlField;
 import com.wlrllr.sdk.msg.Msg;
-import com.wlrllr.util.XmlUtils;
+import com.wlrllr.sdk.util.XmlUtils;
 
 import java.util.List;
 

@@ -6,7 +6,6 @@ import com.wlrllr.sdk.msg.in.event.*;
 import com.wlrllr.sdk.type.EventType;
 import com.wlrllr.sdk.type.MsgType;
 import com.wlrllr.util.StringUtils;
-import com.wlrllr.util.XmlUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;

@@ -1,4 +1,4 @@
-package com.wlrllr.util;
+package com.wlrllr.sdk.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
@@ -11,6 +11,7 @@ import com.wlrllr.sdk.core.XmlField;
 import com.wlrllr.sdk.msg.out.Article;
 import com.wlrllr.sdk.msg.out.OutImageMsg;
 import com.wlrllr.sdk.msg.out.OutNewsMsg;
+import com.wlrllr.util.StringUtils;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
