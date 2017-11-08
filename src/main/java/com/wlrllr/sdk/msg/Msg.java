@@ -1,6 +1,7 @@
 package com.wlrllr.sdk.msg;
 
 import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.util.XmlUtils;
 
 import java.io.Serializable;
 
@@ -17,6 +18,17 @@ public abstract class Msg implements Serializable{
     protected Long createTime;
     @XmlField("MsgType")
     protected String msgType;
+
+    /**
+     * 请求消息对象转换成响应消息对象
+     * @param msg
+     */
+    protected void covert(Msg msg){
+        toUser = msg.getFromUser();
+        fromUser = msg.getToUser();
+        createTime = now();
+        msgType = msg.msgType;
+    }
 
     public String getToUser() {
         return toUser;
@@ -48,5 +60,13 @@ public abstract class Msg implements Serializable{
 
     public void setMsgType(String msgType) {
         this.msgType = msgType;
+    }
+
+    public String toXml(){
+       return XmlUtils.messageToXML(this);
+    }
+
+    public Long now() {
+        return System.currentTimeMillis() / 1000;
     }
 }

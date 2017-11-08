@@ -1,7 +1,7 @@
 package com.wlrllr;
 
 import com.wlrllr.constants.DataConstants;
-import com.wlrllr.core.WxApi;
+import com.wlrllr.sdk.api.TokenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WxController {
 
     @Autowired
-    private WxApi wxApi;
+    private TokenApi wxApi;
 
     @RequestMapping("/token")
     String token(){

@@ -1,7 +1,6 @@
 package com.wlrllr.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wlrllr.core.BaseHandler;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;

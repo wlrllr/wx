@@ -1,26 +1,22 @@
-package com.wlrllr.wxapi;
+package com.wlrllr.sdk.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wlrllr.config.WxProperties;
-import com.wlrllr.constants.DataConstants;
 import com.wlrllr.constants.WxConstants;
 import com.wlrllr.core.bean.JSONObj;
 import com.wlrllr.util.HttpUtils;
-import com.wlrllr.util.JsonUtils;
 import com.wlrllr.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户相关接口
  * Created by w_zhanglong on 2017/10/24.
  */
 @Component
-public class MenuManager extends BaseApi{
+public class MenuApi extends BaseApi {
 
     @Autowired
     private WxProperties wxProperties;
@@ -31,15 +27,15 @@ public class MenuManager extends BaseApi{
      * @param menu
      * @return
      */
-    public  Boolean createMenu(List<MenuItem> menu) {
-        if(menu != null){
-            for(MenuItem item : menu){
-                if(!item.validate()){
+    public Boolean createMenu(List<MenuItem> menu) {
+        if (menu != null) {
+            for (MenuItem item : menu) {
+                if (!item.validate()) {
                     return false;
                 }
             }
         }
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getAddMenu()), new JSONObj("button",menu));
+        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getAddMenu()), new JSONObj("button", menu));
         return returnBoolean(result);
     }
 
@@ -48,24 +44,24 @@ public class MenuManager extends BaseApi{
      *
      * @return
      */
-    public  Boolean deleteMenu() {
+    public Boolean deleteMenu() {
         JSONObject result = HttpUtils.get(urlReplaceAccessToken(wxProperties.getDeleteMenu()));
         return returnBoolean(result);
     }
 
     /**
      * 获取菜单
-     * @return
      *
-     * FIXME 这里应该转成List<MenuIten>对象，后面在做
+     * @return FIXME 这里应该转成List<MenuIten>对象，后面在做
      */
-    public  JSONObject getMenu() {
+    public JSONObject getMenu() {
         JSONObject result = HttpUtils.get(urlReplaceAccessToken(wxProperties.getGetMenu()));
         return returnJson(result);
     }
 
     /**
      * 创建个性化菜单
+     *
      * @param menu
      * @return
      */
@@ -74,7 +70,7 @@ public class MenuManager extends BaseApi{
         return null;
     }
 
-    public class MenuItem{
+    public class MenuItem {
         //菜单的响应动作类型，view表示网页类型，click表示点击类型，miniprogram表示小程序类型
         private String type;
         //菜单标题，不超过16个字节，子菜单不超过60个字节
@@ -156,51 +152,53 @@ public class MenuManager extends BaseApi{
             this.sub_button = sub_button;
         }
 
-        public Boolean validateKey(){
-            if(StringUtils.isBlank(key) && (WxConstants.MENU_BUTTON_TYPE_CLICK.equals(type) || WxConstants.MENU_BUTTON_TYPE_LOCATION.equals(type)
+        public Boolean validateKey() {
+            if (StringUtils.isBlank(key) && (WxConstants.MENU_BUTTON_TYPE_CLICK.equals(type) || WxConstants.MENU_BUTTON_TYPE_LOCATION.equals(type)
                     || WxConstants.MENU_BUTTON_TYPE_SCANCODE_WAITMGS.equals(type) || WxConstants.MENU_BUTTON_TYPE_SCANCODE_PUSH.equals(type)
                     || WxConstants.MENU_BUTTON_TYPE_PIC_SYSPHOTO.equals(type) || WxConstants.MENU_BUTTON_TYPE_PIC_PHOTO.equals(type)
-                    || WxConstants.MENU_BUTTON_TYPE_PIC_WX.equals(type))){
+                    || WxConstants.MENU_BUTTON_TYPE_PIC_WX.equals(type))) {
                 logger.error("click等点击类型时key不能为空");
                 return false;
-            }else if(StringUtils.isNotBlank(key) && key.getBytes().length>128){
+            } else if (StringUtils.isNotBlank(key) && key.getBytes().length > 128) {
                 logger.error("Key长度不能超过128字节");
                 return false;
             }
             return true;
         }
 
-        public Boolean validateUrl(){
-            if(StringUtils.isBlank(url) && (WxConstants.MENU_BUTTON_TYPE_VIEW.equals(type) || WxConstants.MENU_BUTTON_TYPE_MINIPROGRAM.equals(type)
-                    )){
+        public Boolean validateUrl() {
+            if (StringUtils.isBlank(url) && (WxConstants.MENU_BUTTON_TYPE_VIEW.equals(type) || WxConstants.MENU_BUTTON_TYPE_MINIPROGRAM.equals(type)
+            )) {
                 logger.error("网页链接,小程序时，url不能为空");
                 return false;
-            }else if(StringUtils.isNotBlank(url) && key.getBytes().length>1024){
+            } else if (StringUtils.isNotBlank(url) && key.getBytes().length > 1024) {
                 logger.error("url长度不能超过1024字节");
                 return false;
             }
             return true;
         }
-        public Boolean validateMediaId(){
-            if(StringUtils.isBlank(media_id) && (WxConstants.MENU_BUTTON_TYPE_MEDIA.equals(type) || WxConstants.MENU_BUTTON_TYPE_VIEW_LIMITED.equals(type)
-            )){
+
+        public Boolean validateMediaId() {
+            if (StringUtils.isBlank(media_id) && (WxConstants.MENU_BUTTON_TYPE_MEDIA.equals(type) || WxConstants.MENU_BUTTON_TYPE_VIEW_LIMITED.equals(type)
+            )) {
                 logger.error("图片,图文消息时，media_id不能为空");
                 return false;
             }
             return true;
         }
-        public Boolean validate(){
-            if(sub_button != null && sub_button.size()>5){
+
+        public Boolean validate() {
+            if (sub_button != null && sub_button.size() > 5) {
                 logger.error("子菜单数量为1-5个");
-               return false;
-            }
-            if(!validateKey()){
                 return false;
             }
-            if(!validateUrl()){
+            if (!validateKey()) {
                 return false;
             }
-            if(!validateMediaId()){
+            if (!validateUrl()) {
+                return false;
+            }
+            if (!validateMediaId()) {
                 return false;
             }
             return true;

@@ -1,13 +1,16 @@
-package com.wlrllr.core.bean;
+package com.wlrllr.sdk.msg.out;
 
-/**
- * Created by w_zhanglong on 2017/10/19.
- */
-public class Item {
+import com.wlrllr.sdk.core.XmlField;
 
+@XmlField("item")
+public class Article {
+    @XmlField("Title")
     private String title;
+    @XmlField("Description")
     private String description;
+    @XmlField("PicUrl")
     private String picUrl;
+    @XmlField("Url")
     private String url;
 
     public String getTitle() {

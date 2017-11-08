@@ -1,8 +1,7 @@
-package com.wlrllr.wxapi;
+package com.wlrllr.sdk.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wlrllr.config.WxProperties;
-import com.wlrllr.constants.DataConstants;
 import com.wlrllr.core.bean.JSONObj;
 import com.wlrllr.util.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import java.util.List;
  * Created by w_zhanglong on 2017/10/24.
  */
 @Component
-public class UserManager extends BaseApi{
+public class UserApi extends BaseApi{
 
     @Autowired
     private WxProperties wxProperties;

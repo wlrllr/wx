@@ -1,4 +1,4 @@
-package com.wlrllr.wxapi;
+package com.wlrllr.sdk.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wlrllr.config.WxProperties;
@@ -32,7 +32,7 @@ public class BaseApi {
         return false;
     }
 
-    public String returnString(JSONObject result,String key) {
+    public String returnString(JSONObject result, String key) {
         String value = result.getString(key);
         if (result != null && StringUtils.isNotEmpty(value)) {
             return value;
@@ -40,7 +40,7 @@ public class BaseApi {
         return "";
     }
 
-    public String urlReplaceAccessToken(String url,String... param){
-        return String.format(url, DataConstants.ACCESSTOKEN,param);
+    public String urlReplaceAccessToken(String url, String... param) {
+        return String.format(url, DataConstants.ACCESSTOKEN, param);
     }
 }
