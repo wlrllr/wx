@@ -15,18 +15,19 @@ public class BaseApi {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static final String KEY_ERROR_CODE="errcode";
     @Autowired
     public WxProperties wxProperties;
 
     public JSONObject returnJson(JSONObject result) {
-        if (result != null && result.getIntValue("errcode") == 0) {
+        if (result != null && result.getIntValue(KEY_ERROR_CODE) == 0) {
             return result;
         }
         return null;
     }
 
     public Boolean returnBoolean(JSONObject result) {
-        if (result != null && result.getIntValue("errcode") == 0) {
+        if (result != null && result.getIntValue(KEY_ERROR_CODE) == 0) {
             return true;
         }
         return false;
@@ -40,7 +41,7 @@ public class BaseApi {
         return "";
     }
 
-    public String urlReplaceAccessToken(String url, String... param) {
+    public String fillUrlParam(String url, String... param) {
         return String.format(url, DataConstants.ACCESSTOKEN, param);
     }
 }

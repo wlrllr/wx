@@ -2,7 +2,6 @@ package com.wlrllr.sdk.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wlrllr.config.WxProperties;
-import com.wlrllr.core.bean.JSONObj;
 import com.wlrllr.sdk.util.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,7 @@ public class UserApi extends BaseApi{
     private WxProperties wxProperties;
 
     public JSONObject getUserInfo(String openId) {
-        JSONObject result = HttpUtils.get(urlReplaceAccessToken(wxProperties.getUserInfo(),openId));
+        JSONObject result = HttpUtils.get(fillUrlParam(wxProperties.getUserInfo(),openId));
         if (result != null) {
             return result;
         }
@@ -34,7 +33,7 @@ public class UserApi extends BaseApi{
      * @return {"tag":{"id":134,//标签id "name":"广东"}}
      */
     public  Integer addTag(String tagName) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getAddTag()), new JSONObj("tag", new JSONObj("name",tagName)));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getAddTag()), new JSONObj("tag", new JSONObj("name",tagName)));
         if (result != null) {
             return result.getInteger("id");
         }
@@ -46,7 +45,7 @@ public class UserApi extends BaseApi{
      * @return  {"tags":[{"id":1,"name":"每天一罐可乐星人","count":0 //此标签下粉丝数}]}
      */
     public  JSONObject getTag() {
-        return HttpUtils.get(urlReplaceAccessToken(wxProperties.getGetTag()));
+        return HttpUtils.get(fillUrlParam(wxProperties.getGetTag()));
     }
 
     /**
@@ -57,7 +56,7 @@ public class UserApi extends BaseApi{
      * @return
      */
     public  Boolean updateTag(int id,String name) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getUpdateTag()), new JSONObj("tag", new JSONObj("name",name).build("id",id)));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getUpdateTag()), new JSONObj("tag", new JSONObj("name",name).build("id",id)));
         return returnBoolean(result);
     }
 
@@ -78,7 +77,7 @@ public class UserApi extends BaseApi{
               }
      */
     public  JSONObject getTagUsers(int tagId,String openId) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getGetTagUsers()), new JSONObj("tagid", tagId).build("next_openid", openId));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getGetTagUsers()), new JSONObj("tagid", tagId).build("next_openid", openId));
         if (result != null && result.getIntValue("count") > 0) {
             return result;
         }
@@ -110,7 +109,7 @@ public class UserApi extends BaseApi{
      * @return
      */
     public  Boolean bindTag(int tagId,List<String> openId) {
-        return updateUserTag(tagId,openId,urlReplaceAccessToken(wxProperties.getBindTag()));
+        return updateUserTag(tagId,openId, fillUrlParam(wxProperties.getBindTag()));
     }
 
     /**
@@ -120,7 +119,7 @@ public class UserApi extends BaseApi{
      * @return
      */
     public  Boolean unbindTag(int tagId,List<String> openId) {
-        return updateUserTag(tagId,openId,urlReplaceAccessToken(wxProperties.getUnbindTag()));
+        return updateUserTag(tagId,openId, fillUrlParam(wxProperties.getUnbindTag()));
     }
 
     /**
@@ -132,7 +131,7 @@ public class UserApi extends BaseApi{
      * @return
      */
     public  JSONObject getUserTags(String openId) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getGetUserTags()), new JSONObj("openid", openId));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getGetUserTags()), new JSONObj("openid", openId));
         return returnJson(result);
     }
 
@@ -147,7 +146,7 @@ public class UserApi extends BaseApi{
      * @return
      */
     public  Boolean updateremark(String openId,String remark) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getUpdateRemark()), new JSONObj("openid", openId).build("remark", remark));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getUpdateRemark()), new JSONObj("openid", openId).build("remark", remark));
         return returnBoolean(result);
     }
 
@@ -157,7 +156,7 @@ public class UserApi extends BaseApi{
      * @return
      */
     public  JSONObject getUserList(String nextOpenId) {
-        JSONObject result = HttpUtils.get(urlReplaceAccessToken(wxProperties.getUserList(),nextOpenId));
+        JSONObject result = HttpUtils.get(fillUrlParam(wxProperties.getUserList(),nextOpenId));
         return returnJson(result);
     }
 
@@ -167,7 +166,7 @@ public class UserApi extends BaseApi{
      * @return
      */
     public  JSONObject getBlackList(String beginOpenId) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getBlackList()), new JSONObj("begin_openid", beginOpenId));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getBlackList()), new JSONObj("begin_openid", beginOpenId));
         return returnJson(result);
     }
 
@@ -178,7 +177,7 @@ public class UserApi extends BaseApi{
      * @return
      */
     public  JSONObject blackUser(List<String> openIds) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getBatchBlack()), new JSONObj("begin_openid", openIds));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getBatchBlack()), new JSONObj("begin_openid", openIds));
         return returnJson(result);
     }
 
@@ -189,7 +188,7 @@ public class UserApi extends BaseApi{
      * @return
      */
     public  JSONObject unBlackUser(List<String> openIds) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getBatchUnBlack()), new JSONObj("begin_openid", openIds));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getBatchUnBlack()), new JSONObj("begin_openid", openIds));
         return returnJson(result);
     }
 }

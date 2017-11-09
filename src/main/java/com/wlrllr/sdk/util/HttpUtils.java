@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.wlrllr.core.bean.JSONObj;
+import com.wlrllr.sdk.api.JSONObj;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;

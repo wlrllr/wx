@@ -10,6 +10,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
 @MapperScan("com.wlrllr.mapper")
+@EnableAspectJAutoProxy
 public class ApplicationMain {
 
 	public static void main(String[] args) {

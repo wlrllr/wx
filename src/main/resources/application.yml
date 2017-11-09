@@ -38,4 +38,4 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
   aop:
     auto: true
-   # proxy-target-class: false
+    proxy-target-class: true

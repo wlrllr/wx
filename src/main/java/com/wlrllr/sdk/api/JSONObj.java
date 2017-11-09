@@ -1,8 +1,6 @@
-package com.wlrllr.core.bean;
+package com.wlrllr.sdk.api;
 
 import com.alibaba.fastjson.JSONObject;
-
-import java.util.Map;
 
 /**
  * Created by w_zhanglong on 2017/10/26.

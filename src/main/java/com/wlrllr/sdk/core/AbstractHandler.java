@@ -2,22 +2,23 @@ package com.wlrllr.sdk.core;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wlrllr.config.WxProperties;
-import com.wlrllr.sdk.interceptor.Interceptor;
 import com.wlrllr.sdk.interceptor.ThreadLocalParam;
 import com.wlrllr.sdk.msg.Msg;
 import com.wlrllr.sdk.msg.MsgParser;
 import com.wlrllr.sdk.msg.in.*;
 import com.wlrllr.sdk.msg.in.event.*;
+import com.wlrllr.sdk.msg.in.event.menu.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
-import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
 /**
  * Created by wlrllr on 2017/11/8.
  */
+@Component
 public abstract class AbstractHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHandler.class);
@@ -33,7 +35,7 @@ public abstract class AbstractHandler {
 
     public String index(HttpServletRequest request) {
         try {
-            if(isVerify(request)){
+            if (isVerify(request)) {
                 return verify(request);
             }
             return invoke(MsgParser.parse(request.getInputStream()));
@@ -43,15 +45,24 @@ public abstract class AbstractHandler {
         return "";
     }
 
+    public String toStr(InputStream is) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int i;
+        while ((i = is.read()) != -1) {
+            baos.write(i);
+        }
+        return baos.toString();
+    }
+
     public String invoke(Msg msg) {
         //拦截做的有问题先这样
         if (msg != null) {
             String appId = msg.getToUser();
-            if(StringUtils.isNotBlank(appId)){
+            if (StringUtils.isNotBlank(appId)) {
                 ThreadLocalParam.setThreadLocalAppId(appId);
             }
         }
-        logger.info(">>>>>>>>>>Thread:{},请求参数:{}<<<<<<<<", Thread.currentThread(), JSONObject.toJSONString(msg));
+        logger.info(">>>>>>>>>>请求参数:{}<<<<<<<<", JSONObject.toJSONString(msg));
         if (msg instanceof TextMsg)
             return doTextMsg((TextMsg) msg);
         else if (msg instanceof LinkMsg)
@@ -71,12 +82,20 @@ public abstract class AbstractHandler {
             return doFollowEvent((FollowEvent) msg);
         else if (msg instanceof LocationEvent)
             return doLocationEvent((LocationEvent) msg);
-        else if (msg instanceof MenuClickEvent)
-            return doMenuClickEvent((MenuClickEvent) msg);
-        else if (msg instanceof MenuUrlEvent)
-            return doMenuUrlEvent((MenuUrlEvent) msg);
+        else if (msg instanceof ClickEvent)
+            return doMenuClickEvent((ClickEvent) msg);
+        else if (msg instanceof ViewEvent)
+            return doMenuUrlEvent((ViewEvent) msg);
         else if (msg instanceof ScanEvent)
             return doScanEvent((ScanEvent) msg);
+        else if (msg instanceof PicEvent)
+            return doPicEvent((PicEvent) msg);
+        else if (msg instanceof LocationSelectEvent)
+            return doLocationSelectEvent((LocationSelectEvent) msg);
+        else if (msg instanceof ScanPushEvent)
+            return doScanPushEvent((ScanPushEvent) msg);
+        else if (msg instanceof ScanWaitEvent)
+            return doScanWaitEvent((ScanWaitEvent) msg);
         return "";
     }
 
@@ -121,13 +140,22 @@ public abstract class AbstractHandler {
     protected abstract String doLocationEvent(LocationEvent inLocationEvent);
 
     //点击菜单按钮事件
-    protected abstract String doMenuClickEvent(MenuClickEvent menuClickEvent);
+    protected abstract String doMenuClickEvent(ClickEvent clickEvent);
 
     //点击菜单Url事件
-    protected abstract String doMenuUrlEvent(MenuUrlEvent menuUrlEvent);
+    protected abstract String doMenuUrlEvent(ViewEvent viewEvent);
 
     //扫描事件
     protected abstract String doScanEvent(ScanEvent scanEvent);
+
+    //选择定位事件
+    protected abstract String doLocationSelectEvent(LocationSelectEvent locationSelectEvent);
+    //发送选择图片事件
+    protected abstract String doPicEvent(PicEvent picEvent);
+    //扫码推送事件
+    protected abstract String doScanPushEvent(ScanPushEvent scanPushEvent);
+    //扫码等待事件
+    protected abstract String doScanWaitEvent(ScanWaitEvent scanWaitEvent);
 
     private boolean checkSignature(String signature, String timestamp, String nonce, String token) {
         if (StringUtils.isNotBlank(signature) && StringUtils.isNotBlank(timestamp) && StringUtils.isNotBlank(nonce)) {
@@ -148,11 +176,11 @@ public abstract class AbstractHandler {
         return false;
     }
 
-    private boolean isVerify(HttpServletRequest request){
+    private boolean isVerify(HttpServletRequest request) {
         String echostr = request.getParameter("echostr");
-       if(StringUtils.isNotBlank(echostr)){
-           return true;
-       }
-       return false;
+        if (StringUtils.isNotBlank(echostr)) {
+            return true;
+        }
+        return false;
     }
 }

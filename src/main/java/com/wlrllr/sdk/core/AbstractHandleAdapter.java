@@ -2,6 +2,7 @@ package com.wlrllr.sdk.core;
 
 import com.wlrllr.sdk.msg.in.*;
 import com.wlrllr.sdk.msg.in.event.*;
+import com.wlrllr.sdk.msg.in.event.menu.*;
 
 /**
  * 对接收到的所有消息和事件做默认处理
@@ -55,17 +56,42 @@ public class AbstractHandleAdapter extends AbstractHandler {
     }
 
     @Override
-    protected String doMenuClickEvent(MenuClickEvent menuClickEvent) {
+    protected String doMenuClickEvent(ClickEvent clickEvent) {
         return defaultDo();
     }
 
     @Override
-    protected String doMenuUrlEvent(MenuUrlEvent menuUrlEvent) {
+    protected String doMenuUrlEvent(ViewEvent viewEvent) {
         return defaultDo();
     }
 
     @Override
     protected String doScanEvent(ScanEvent scanEvent) {
+        return defaultDo();
+    }
+
+    @Override
+    protected String doLocationSelectEvent(LocationSelectEvent locationSelectEvent) {
+        return defaultDo();
+    }
+
+    /**
+     * 包含三种事件pic_weixin，pic_photo_or_album，pic_sysphoto
+     * @param picEvent
+     * @return
+     */
+    @Override
+    protected String doPicEvent(PicEvent picEvent) {
+        return defaultDo();
+    }
+
+    @Override
+    protected String doScanPushEvent(ScanPushEvent scanPushEvent) {
+        return defaultDo();
+    }
+
+    @Override
+    protected String doScanWaitEvent(ScanWaitEvent scanWaitEvent) {
         return defaultDo();
     }
 

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wlrllr.config.WxProperties;
 import com.wlrllr.constants.WxConstants;
-import com.wlrllr.core.bean.JSONObj;
 import com.wlrllr.sdk.util.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +33,7 @@ public class MediaApi extends BaseApi {
         Map<String, Object> map = new HashMap<>();
         map.put("type", type);
         map.put("media", media);
-        JSONObject result = HttpUtils.uploadFile(urlReplaceAccessToken(wxProperties.getAddMedia()), map);
+        JSONObject result = HttpUtils.uploadFile(fillUrlParam(wxProperties.getAddMedia()), map);
         return returnString(result, "media_id");
     }
 
@@ -45,7 +44,7 @@ public class MediaApi extends BaseApi {
      * @return 视频{"video_url":DOWN_URL},其他类型的Media未知？
      */
     public String getMedia(String mediaId) {
-        JSONObject result = HttpUtils.get(urlReplaceAccessToken(wxProperties.getGetMedia(), mediaId));
+        JSONObject result = HttpUtils.get(fillUrlParam(wxProperties.getGetMedia(), mediaId));
         return returnString(result, "video_url");
     }
 
@@ -65,7 +64,7 @@ public class MediaApi extends BaseApi {
         JSONArray articles = new JSONArray(1);
         articles.add(new JSONObj("title", title).build("thumb_media_id", mediaId).build("author", author).build("digest", digest)
                 .build("show_cover_pic", coverPic).build("content", content).build("content_source_url", sourceUrl));
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getAddNews()), new JSONObj("articles", articles));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getAddNews()), new JSONObj("articles", articles));
         return returnString(result, "media_id");
     }
 
@@ -76,7 +75,7 @@ public class MediaApi extends BaseApi {
      * @return {"media_id":MEDIA_ID }
      */
     public String addNews(JSONArray articles) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getAddNews()), new JSONObj("articles", articles));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getAddNews()), new JSONObj("articles", articles));
         return returnString(result, "media_id");
     }
 
@@ -107,7 +106,7 @@ public class MediaApi extends BaseApi {
     public String uploadImg(InputStream img) {
         Map<String, Object> map = new HashMap<>();
         map.put("media", img);
-        JSONObject result = HttpUtils.uploadFile(urlReplaceAccessToken(wxProperties.getUploadImg()), map);
+        JSONObject result = HttpUtils.uploadFile(fillUrlParam(wxProperties.getUploadImg()), map);
         return returnString(result, "url");
     }
 
@@ -126,7 +125,7 @@ public class MediaApi extends BaseApi {
         if (type.equals(WxConstants.MATERIAL_TYPE_VIDEO)) {
             data.put("description", new JSONObj("title", title).build("introduction", introduction));
         }
-        return HttpUtils.uploadFile(urlReplaceAccessToken(wxProperties.getAddMaterial(), type), data);
+        return HttpUtils.uploadFile(fillUrlParam(wxProperties.getAddMaterial(), type), data);
     }
 
     /**
@@ -153,11 +152,8 @@ public class MediaApi extends BaseApi {
      * "content_source_url":CONTENT_SOURCE_URL}
      */
     public JSONObject getMaterial(String mediaId) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getGetMaterial()), new JSONObj("media_id", mediaId));
-        if (result == null || org.springframework.util.StringUtils.isEmpty(result.getString("errcode"))) {
-            return null;
-        }
-        return result;
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getGetMaterial()), new JSONObj("media_id", mediaId));
+        return returnJson(result);
     }
 
     /**
@@ -167,7 +163,7 @@ public class MediaApi extends BaseApi {
      * @return
      */
     public boolean delMaterial(String mediaId) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getDelMaterial()), new JSONObj("media_id", mediaId));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getDelMaterial()), new JSONObj("media_id", mediaId));
         return returnBoolean(result);
     }
 
@@ -180,7 +176,7 @@ public class MediaApi extends BaseApi {
      * @return
      */
     public boolean updateNews(String mediaId, int index, JSONObj article) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getUpdateNews()),
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getUpdateNews()),
                 new JSONObj("media_id", mediaId).build("index", index).build("articles", article));
         return returnBoolean(result);
     }
@@ -191,7 +187,7 @@ public class MediaApi extends BaseApi {
      * @return {"voice_count":COUNT,"video_count":COUNT,"image_count":COUNT,"news_count":COUNT}
      */
     public JSONObject getMaterialCount() {
-        return HttpUtils.get(urlReplaceAccessToken(wxProperties.getGetMaterialCount()));
+        return HttpUtils.get(fillUrlParam(wxProperties.getGetMaterialCount()));
     }
 
     /**
@@ -219,7 +215,7 @@ public class MediaApi extends BaseApi {
      * }]
      */
     public JSONObject getMaterialList(String type, String offset, String count) {
-        return HttpUtils.post(urlReplaceAccessToken(wxProperties.getGetMaterialList()),
+        return HttpUtils.post(fillUrlParam(wxProperties.getGetMaterialList()),
                 new JSONObj("type", type).build("offset", offset).build("count", count));
     }
 }

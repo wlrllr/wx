@@ -1,7 +1,6 @@
 package com.wlrllr.sdk.api;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wlrllr.core.bean.JSONObj;
 import com.wlrllr.sdk.util.HttpUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
@@ -46,12 +45,12 @@ public class KfApi extends BaseApi {
     /**
      * 删除客服帐号
      */
-    public Boolean addNews(String account, String nickName, String password) {
-        return operateKf(wxProperties.getUpdatekf(), account, nickName, password);
+    public Boolean delKf(String account, String nickName, String password) {
+        return operateKf(wxProperties.getDeletekf(), account, nickName, password);
     }
 
     private Boolean operateKf(String url, String account, String nickName, String password) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(url),
+        JSONObject result = HttpUtils.post(fillUrlParam(url),
                 new JSONObj("kf_account", account).build("nickname", nickName).build("password", password));
         return returnBoolean(result);
     }
@@ -64,7 +63,7 @@ public class KfApi extends BaseApi {
      * @return
      */
     public Boolean updateHeaderImg(String account, InputStream headerImg) {
-        JSONObject result = HttpUtils.uploadFile(urlReplaceAccessToken(wxProperties.getUploadkfimg(), account), new JSONObj("headerImg", headerImg));
+        JSONObject result = HttpUtils.uploadFile(fillUrlParam(wxProperties.getUploadkfimg(), account), new JSONObj("headerImg", headerImg));
         return returnBoolean(result);
     }
 
@@ -82,7 +81,7 @@ public class KfApi extends BaseApi {
      * }
      */
     public JSONObject getKfList() {
-        return HttpUtils.get(urlReplaceAccessToken(wxProperties.getGetkflist()));
+        return HttpUtils.get(fillUrlParam(wxProperties.getGetkflist()));
     }
 
     /**
@@ -99,7 +98,7 @@ public class KfApi extends BaseApi {
         if (StringUtils.isNotBlank(kfAccount)) {
             data.build("customservice", new JSONObj("kf_account", kfAccount));
         }
-        return HttpUtils.post(urlReplaceAccessToken(wxProperties.getSendkfmsg()), data);
+        return HttpUtils.post(fillUrlParam(wxProperties.getSendkfmsg()), data);
     }
 
     /**
@@ -115,7 +114,7 @@ public class KfApi extends BaseApi {
      * @return
      */
     public Boolean typing(String touser, String command) {
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getTyping())
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getTyping())
                 , new JSONObj("touser", touser).build("msgtype", command));
         return returnBoolean(result);
     }

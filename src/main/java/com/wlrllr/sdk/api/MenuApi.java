@@ -2,11 +2,7 @@ package com.wlrllr.sdk.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wlrllr.config.WxProperties;
-import com.wlrllr.constants.WxConstants;
-import com.wlrllr.core.bean.JSONObj;
-import com.wlrllr.sdk.model.MenuItem;
 import com.wlrllr.sdk.util.HttpUtils;
-import com.wlrllr.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +32,7 @@ public class MenuApi extends BaseApi {
                 }
             }
         }
-        JSONObject result = HttpUtils.post(urlReplaceAccessToken(wxProperties.getAddMenu()), new JSONObj("button", menu));
+        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getAddMenu()), new JSONObj("button", menu));
         return returnBoolean(result);
     }
 
@@ -46,7 +42,7 @@ public class MenuApi extends BaseApi {
      * @return
      */
     public Boolean deleteMenu() {
-        JSONObject result = HttpUtils.get(urlReplaceAccessToken(wxProperties.getDeleteMenu()));
+        JSONObject result = HttpUtils.get(fillUrlParam(wxProperties.getDeleteMenu()));
         return returnBoolean(result);
     }
 
@@ -56,7 +52,7 @@ public class MenuApi extends BaseApi {
      * @return FIXME 这里应该转成List<MenuIten>对象，后面在做
      */
     public JSONObject getMenu() {
-        JSONObject result = HttpUtils.get(urlReplaceAccessToken(wxProperties.getGetMenu()));
+        JSONObject result = HttpUtils.get(fillUrlParam(wxProperties.getGetMenu()));
         return returnJson(result);
     }
 

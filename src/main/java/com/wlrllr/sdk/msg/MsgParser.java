@@ -1,8 +1,10 @@
 package com.wlrllr.sdk.msg;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wlrllr.sdk.core.XmlField;
 import com.wlrllr.sdk.msg.in.*;
 import com.wlrllr.sdk.msg.in.event.*;
+import com.wlrllr.sdk.msg.in.event.menu.*;
 import com.wlrllr.sdk.type.EventType;
 import com.wlrllr.sdk.type.MsgType;
 import com.wlrllr.util.StringUtils;
@@ -24,23 +26,15 @@ public class MsgParser {
 
     private static Logger logger = LoggerFactory.getLogger(MsgParser.class);
 
-    public static Msg parse(String url){
+    public static Msg parse(InputStream inputStream) {
         try {
-            return parse(new SAXReader().read(url));
+            return parse(new SAXReader().read(inputStream));
         } catch (DocumentException e) {
-            logger.error(">>>>>>>>>解析xml异常,url:{}<<<<<<<",url,e);
+            logger.error(">>>>>>>>>解析xml异常<<<<<<<", e);
         }
         return null;
     }
 
-    public static Msg parse(InputStream inputStream){
-        try {
-            return parse(new SAXReader().read(inputStream));
-        } catch (DocumentException e) {
-            logger.error(">>>>>>>>>解析xml异常<<<<<<<",e);
-        }
-        return null;
-    }
     public static Msg parse(Document document) {
         Element root = document.getRootElement();
         List<Element> elementList = root.elements();
@@ -49,39 +43,41 @@ public class MsgParser {
             String msgType = element.getText();
             switch (msgType) {
                 case MsgType.TEXT:
-                    return parseMsg(elementList,TextMsg.class);
+                    return parseMsg(elementList, TextMsg.class);
                 case MsgType.IMAGE:
-                    return parseMsg(elementList,ImageMsg.class);
+                    return parseMsg(elementList, ImageMsg.class);
                 case MsgType.LINK:
-                    return parseMsg(elementList,LinkMsg.class);
+                    return parseMsg(elementList, LinkMsg.class);
                 case MsgType.LOCATION:
-                    return parseMsg(elementList,LocationMsg.class);
+                    return parseMsg(elementList, LocationMsg.class);
                 case MsgType.VIDEO:
-                    return parseMsg(elementList,VideoMsg.class);
+                    return parseMsg(elementList, VideoMsg.class);
                 case MsgType.VOICE:
-                    return parseMsg(elementList,VoiceMsg.class);
+                    return parseMsg(elementList, VoiceMsg.class);
                 case MsgType.EVENT:
                     element = root.element("Event");
-                    return parseEvent(elementList,element.getText());
+                    return parseEvent(elementList, element.getText());
+                default:
+                    logger.warn(">>>>>>>为解析到消息类型:msgType:[{}],content:[{}]<<<<<<<<", msgType,root.getData());
             }
         }
         return null;
     }
 
-    private static BaseMsg parseMsg(List<Element> elementList, Class<? extends BaseMsg> clazz){
-        Object obj = doParse(elementList,clazz);
-        if(obj == null){ //FIXME 返回默认的对象
+    private static BaseMsg parseMsg(List<Element> elementList, Class<? extends BaseMsg> clazz) {
+        Object obj = doParse(elementList, clazz);
+        if (obj == null) { //FIXME 返回默认的对象
             return null;
-        }else{
+        } else {
             return clazz.cast(obj);
         }
     }
 
-    private static BaseEvent parseEvent(List<Element> elementList,String event){
+    private static BaseEvent parseEvent(List<Element> elementList, String event) {
         Class<? extends BaseEvent> clazz = null;
-        switch (event){
+        switch (event) {
             case EventType.CLICK:
-                clazz = MenuClickEvent.class;
+                clazz = ClickEvent.class;
                 break;
             case EventType.LOCATION:
                 clazz = LocationEvent.class;
@@ -92,15 +88,35 @@ public class MsgParser {
             case EventType.SUBSCRIBE:
                 clazz = FollowEvent.class;
                 break;
-            case EventType.UNSUBSCRIBE:
+            case EventType.UN_SUBSCRIBE:
                 clazz = FollowEvent.class;
                 break;
+            case EventType.PIC_PHOTO:
+                clazz = PicEvent.class;
+                break;
+            case EventType.PIC_SYSPHOTO:
+                clazz = PicEvent.class;
+                break;
+            case EventType.PIC_WX:
+                clazz = PicEvent.class;
+                break;
+            case EventType.LOCATION_SELECT:
+                clazz = LocationSelectEvent.class;
+                break;
+            case EventType.SCAN_CODE_PUSH:
+                clazz = ScanPushEvent.class;
+                break;
+            case EventType.SCAN_CODE_WAIT_MSG:
+                clazz = ScanWaitEvent.class;
+                break;
+            default:
+                logger.warn(">>>>>>>为解析到消息类型:EventType:[{}],content:[{}]<<<<<<<<", event);
         }
-        if(clazz != null){
+        if (clazz != null) {
             Object obj = doParse(elementList, clazz);
-            if(obj == null){ //FIXME 返回默认的对象
+            if (obj == null) { //FIXME 返回默认的对象
                 return null;
-            }else{
+            } else {
                 return clazz.cast(obj);
             }
         }
@@ -119,9 +135,9 @@ public class MsgParser {
                                 if (annotation.value().equals(element.getName())) {
                                     field.setAccessible(true);
                                     Class type = field.getType();
-                                    if(type.isAssignableFrom(Long.class)){
+                                    if (type.isAssignableFrom(Long.class)) {
                                         field.set(msg, Long.valueOf(element.getData().toString()));
-                                    }else if(type.isAssignableFrom(String.class)){
+                                    } else if (type.isAssignableFrom(String.class)) {
                                         field.set(msg, element.getText());
                                     }
                                     elementList.remove(element);

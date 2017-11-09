@@ -14,10 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class Interceptor {
 
-    @Around("execution(String com.wlrllr.sdk.core.AbstractHandler.invoke(..))")
+   // @Around("@annotation(com.wlrllr.sdk.core.Interceptor))")
     public Object interceptor(ProceedingJoinPoint point) {
         Object[] args = point.getArgs();
         Msg msg = (Msg) args[0];
+        System.out.print("----------->进拦截器了---------------");
         if (msg != null) {
             String appId = msg.getToUser();
             if(StringUtils.isNotBlank(appId)){
