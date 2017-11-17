@@ -1,15 +1,18 @@
 package com.wlrllr.sdk.api;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.wlrllr.config.WxProperties;
+import com.wlrllr.sdk.core.config.WxProperties;
 import com.wlrllr.constants.WxConstants;
+import com.wlrllr.sdk.api.model.JSONObj;
+import com.wlrllr.sdk.api.model.UploadNews;
 import com.wlrllr.sdk.util.HttpUtils;
+import com.wlrllr.sdk.util.InputStreamBody;
+import com.wlrllr.sdk.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,11 +32,10 @@ public class MediaApi extends BaseApi {
      * @param media
      * @return {"type":"TYPE","media_id":"MEDIA_ID","created_at":123456789}
      */
-    public String addMedia(String type, InputStream media) {
+    public String addMedia(String type, InputStreamBody media) {
         Map<String, Object> map = new HashMap<>();
-        map.put("type", type);
         map.put("media", media);
-        JSONObject result = HttpUtils.uploadFile(fillUrlParam(wxProperties.getAddMedia()), map);
+        JSONObj result = HttpUtils.uploadFile(fillUrlParam(wxProperties.getAddMedia(),type), map);
         return returnString(result, "media_id");
     }
 
@@ -44,56 +46,33 @@ public class MediaApi extends BaseApi {
      * @return 视频{"video_url":DOWN_URL},其他类型的Media未知？
      */
     public String getMedia(String mediaId) {
-        JSONObject result = HttpUtils.get(fillUrlParam(wxProperties.getGetMedia(), mediaId));
+        JSONObj result = HttpUtils.get(fillUrlParam(wxProperties.getGetMedia(), mediaId));
         return returnString(result, "video_url");
     }
 
     /**
      * 新增永久图文素材
      *
-     * @param title     标题
-     * @param mediaId   图文消息的封面图片素材id（必须是永久mediaID）
-     * @param author    作者
-     * @param digest    图文消息的摘要，仅有单图文消息才有摘要，多图文此处为空。如果本字段为没有填写，则默认抓取正文前64个字。
-     * @param coverPic  是否显示封面，0为false，即不显示，1为true，即显示
-     * @param content   图文消息的具体内容，支持HTML标签，必须少于2万字符，小于1M，且此处会去除JS,涉及图片url必须来源"上传图文消息内的图片获取URL"接口获取。外部图片url将被过滤。
-     * @param sourceUrl 图文消息的原文地址，即点击“阅读原文”后的URL
+     * @param news   图文
      * @return {"media_id":MEDIA_ID }
      */
-    public String addNews(String title, String mediaId, String author, String digest, String coverPic, String content, String sourceUrl) {
+    public String addNews(UploadNews news) {
         JSONArray articles = new JSONArray(1);
-        articles.add(new JSONObj("title", title).build("thumb_media_id", mediaId).build("author", author).build("digest", digest)
-                .build("show_cover_pic", coverPic).build("content", content).build("content_source_url", sourceUrl));
-        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getAddNews()), new JSONObj("articles", articles));
+        articles.add(JsonUtils.toJson(news));
+        JSONObj result = HttpUtils.post(fillUrlParam(wxProperties.getAddNews()), new JSONObj("articles", articles));
         return returnString(result, "media_id");
     }
 
     /**
      * 新增永久图文素材
      *
-     * @param articles 多个图文集合
+     * @param news 多个图文集合
      * @return {"media_id":MEDIA_ID }
      */
-    public String addNews(JSONArray articles) {
-        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getAddNews()), new JSONObj("articles", articles));
+    public String addNews(List<UploadNews> news) {
+        JSONArray articles = JsonUtils.toJson(news);
+        JSONObj result = HttpUtils.post(fillUrlParam(wxProperties.getAddNews()), new JSONObj("articles", articles));
         return returnString(result, "media_id");
-    }
-
-    /**
-     * 构建图文素材
-     *
-     * @param title     标题
-     * @param mediaId   图文消息的封面图片素材id（必须是永久mediaID）
-     * @param author    作者
-     * @param digest    图文消息的摘要，仅有单图文消息才有摘要，多图文此处为空。如果本字段为没有填写，则默认抓取正文前64个字。
-     * @param coverPic  是否显示封面，0为false，即不显示，1为true，即显示
-     * @param content   图文消息的具体内容，支持HTML标签，必须少于2万字符，小于1M，且此处会去除JS,涉及图片url必须来源"上传图文消息内的图片获取URL"接口获取。外部图片url将被过滤。
-     * @param sourceUrl 图文消息的原文地址，即点击“阅读原文”后的URL
-     * @return 单个图文
-     */
-    public static JSONObj buildArticle(String title, String mediaId, String author, String digest, String coverPic, String content, String sourceUrl) {
-        return new JSONObj("title", title).build("thumb_media_id", mediaId).build("author", author).build("digest", digest)
-                .build("show_cover_pic", coverPic).build("content", content).build("content_source_url", sourceUrl);
     }
 
     /**
@@ -103,11 +82,19 @@ public class MediaApi extends BaseApi {
      * @param img form-data中媒体文件标识，有filename、filelength、content-type等信息
      * @return
      */
-    public String uploadImg(InputStream img) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("media", img);
-        JSONObject result = HttpUtils.uploadFile(fillUrlParam(wxProperties.getUploadImg()), map);
+    public String uploadImg(InputStreamBody img) {
+        JSONObj result = HttpUtils.uploadFile(fillUrlParam(wxProperties.getUploadImg()), new JSONObj("media",img));
         return returnString(result, "url");
+    }
+
+    /**
+     * 上传图文消息素材，用于群发
+     * @param list
+     * @return
+     */
+    public String uploadNews(List<UploadNews> list) {
+        JSONObj result = HttpUtils.post(fillUrlParam(wxProperties.getUploadNews()), new JSONObj("articles", JsonUtils.toJson(list)));
+        return returnString(result, "media_id");
     }
 
     /**
@@ -120,7 +107,7 @@ public class MediaApi extends BaseApi {
      * @param introduction 视频素材的描述
      * @return {"media_id":MEDIA_ID,"url":URL}
      */
-    public JSONObject addMaterial(String type, InputStream media, String title, String introduction) {
+    public JSONObj addMaterial(String type, InputStreamBody media, String title, String introduction) {
         JSONObj data = new JSONObj("media", media);
         if (type.equals(WxConstants.MATERIAL_TYPE_VIDEO)) {
             data.put("description", new JSONObj("title", title).build("introduction", introduction));
@@ -151,8 +138,8 @@ public class MediaApi extends BaseApi {
      * "author":AUTHOR,"digest":DIGEST,"content":CONTENT,"url":URL,
      * "content_source_url":CONTENT_SOURCE_URL}
      */
-    public JSONObject getMaterial(String mediaId) {
-        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getGetMaterial()), new JSONObj("media_id", mediaId));
+    public JSONObj getMaterial(String mediaId) {
+        JSONObj result = HttpUtils.post(fillUrlParam(wxProperties.getGetMaterial()), new JSONObj("media_id", mediaId));
         return returnJson(result);
     }
 
@@ -163,7 +150,7 @@ public class MediaApi extends BaseApi {
      * @return
      */
     public boolean delMaterial(String mediaId) {
-        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getDelMaterial()), new JSONObj("media_id", mediaId));
+        JSONObj result = HttpUtils.post(fillUrlParam(wxProperties.getDelMaterial()), new JSONObj("media_id", mediaId));
         return returnBoolean(result);
     }
 
@@ -176,7 +163,7 @@ public class MediaApi extends BaseApi {
      * @return
      */
     public boolean updateNews(String mediaId, int index, JSONObj article) {
-        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getUpdateNews()),
+        JSONObj result = HttpUtils.post(fillUrlParam(wxProperties.getUpdateNews()),
                 new JSONObj("media_id", mediaId).build("index", index).build("articles", article));
         return returnBoolean(result);
     }
@@ -186,7 +173,7 @@ public class MediaApi extends BaseApi {
      *
      * @return {"voice_count":COUNT,"video_count":COUNT,"image_count":COUNT,"news_count":COUNT}
      */
-    public JSONObject getMaterialCount() {
+    public JSONObj getMaterialCount() {
         return HttpUtils.get(fillUrlParam(wxProperties.getGetMaterialCount()));
     }
 
@@ -214,7 +201,7 @@ public class MediaApi extends BaseApi {
      * "update_time": UPDATE_TIME
      * }]
      */
-    public JSONObject getMaterialList(String type, String offset, String count) {
+    public JSONObj getMaterialList(String type, String offset, String count) {
         return HttpUtils.post(fillUrlParam(wxProperties.getGetMaterialList()),
                 new JSONObj("type", type).build("offset", offset).build("count", count));
     }

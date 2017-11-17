@@ -32,7 +32,7 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUser,WxUserExample,Inte
         example.createCriteria().andOpenIdEqualTo(openid).andAppIdEqualTo(appId);
         WxUser user = new WxUser();
         user.setForbidden("Y");
-        user.setUnsubscribeTime(new Date());
+        user.setUnSubscribeTime(new Date());
         wxUserMapper.updateByExampleSelective(user,example);
     }
 
@@ -47,6 +47,7 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUser,WxUserExample,Inte
             record.setForbidden("N");
             record.setSubscribeTime(new Date());
             wxUserMapper.updateByPrimaryKeySelective(record);
+            return;
         }
         wxUserMapper.insertSelective(user);
     }

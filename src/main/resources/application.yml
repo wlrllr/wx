@@ -39,3 +39,8 @@ spring:
   aop:
     auto: true
     proxy-target-class: true
+  mvc:
+    view:
+       prefix: /WEB-INF/view/ # Spring MVC view prefix.
+       suffix: .jsp # Spring MVC view suffix.
+       # static-path-pattern: /static # Path pattern used for static resources.

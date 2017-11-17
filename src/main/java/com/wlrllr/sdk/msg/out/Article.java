@@ -1,16 +1,16 @@
 package com.wlrllr.sdk.msg.out;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 
-@XmlField("item")
+@Alias("item")
 public class Article {
-    @XmlField("Title")
+    @Alias("Title")
     private String title;
-    @XmlField("Description")
+    @Alias("Description")
     private String description;
-    @XmlField("PicUrl")
+    @Alias("PicUrl")
     private String picUrl;
-    @XmlField("Url")
+    @Alias("Url")
     private String url;
 
     public String getTitle() {

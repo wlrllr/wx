@@ -1,6 +1,6 @@
 package com.wlrllr.sdk.msg.in.event;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.msg.Msg;
 
 /**
@@ -8,7 +8,7 @@ import com.wlrllr.sdk.msg.Msg;
  */
 public abstract class BaseEvent extends Msg {
 
-    @XmlField("Event")
+    @Alias("Event")
     protected String event;
 
     public String getEvent() {

@@ -1,8 +1,7 @@
 package com.wlrllr.sdk.core;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wlrllr.config.WxProperties;
-import com.wlrllr.sdk.interceptor.ThreadLocalParam;
+import com.wlrllr.sdk.core.config.WxProperties;
 import com.wlrllr.sdk.msg.Msg;
 import com.wlrllr.sdk.msg.MsgParser;
 import com.wlrllr.sdk.msg.in.*;
@@ -13,7 +12,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
@@ -26,19 +28,22 @@ import java.util.List;
 /**
  * Created by wlrllr on 2017/11/8.
  */
-@Component
+@RestController
 public abstract class AbstractHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHandler.class);
     @Autowired
     protected WxProperties wxProperties;
 
+    @RequestMapping("wxServer")
     public String index(HttpServletRequest request) {
         try {
             if (isVerify(request)) {
                 return verify(request);
             }
-            return invoke(MsgParser.parse(request.getInputStream()));
+            String req = toStr(request.getInputStream());
+            logger.info(">>>>>>>>>>请求参数:{}<<<<<<<<", req);
+            return invoke(MsgParser.parse(req));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,10 +64,10 @@ public abstract class AbstractHandler {
         if (msg != null) {
             String appId = msg.getToUser();
             if (StringUtils.isNotBlank(appId)) {
-                ThreadLocalParam.setThreadLocalAppId(appId);
+                ThreadLocalParam.setAccount(appId);
             }
         }
-        logger.info(">>>>>>>>>>请求参数:{}<<<<<<<<", JSONObject.toJSONString(msg));
+        logger.info(">>>>>>>>>>解析后的请求参数:{}<<<<<<<<", JSONObject.toJSONString(msg));
         if (msg instanceof TextMsg)
             return doTextMsg((TextMsg) msg);
         else if (msg instanceof LinkMsg)
@@ -96,6 +101,9 @@ public abstract class AbstractHandler {
             return doScanPushEvent((ScanPushEvent) msg);
         else if (msg instanceof ScanWaitEvent)
             return doScanWaitEvent((ScanWaitEvent) msg);
+        else if (msg instanceof MassSendJobEvent)
+            return doMassSendJobEvent((MassSendJobEvent) msg);
+
         return "";
     }
 
@@ -150,12 +158,18 @@ public abstract class AbstractHandler {
 
     //选择定位事件
     protected abstract String doLocationSelectEvent(LocationSelectEvent locationSelectEvent);
+
     //发送选择图片事件
     protected abstract String doPicEvent(PicEvent picEvent);
+
     //扫码推送事件
     protected abstract String doScanPushEvent(ScanPushEvent scanPushEvent);
+
     //扫码等待事件
     protected abstract String doScanWaitEvent(ScanWaitEvent scanWaitEvent);
+    //群发完成通知事件
+    protected abstract String doMassSendJobEvent(MassSendJobEvent massSendJobEvent);
+
 
     private boolean checkSignature(String signature, String timestamp, String nonce, String token) {
         if (StringUtils.isNotBlank(signature) && StringUtils.isNotBlank(timestamp) && StringUtils.isNotBlank(nonce)) {

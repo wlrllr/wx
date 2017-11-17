@@ -1,17 +1,17 @@
 package com.wlrllr.sdk.msg.in.event;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 
 /**
  * Created by wlrllr on 2017/11/7.
  */
 public class LocationEvent extends BaseEvent {
 
-    @XmlField("Latitude")
+    @Alias("Latitude")
     private String latitude;
-    @XmlField("Longitude")
+    @Alias("Longitude")
     private String longitude;
-    @XmlField("Precision")
+    @Alias("Precision")
     private String precision;
 
     public String getLatitude() {

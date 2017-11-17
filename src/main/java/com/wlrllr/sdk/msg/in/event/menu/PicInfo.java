@@ -1,6 +1,6 @@
 package com.wlrllr.sdk.msg.in.event.menu;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import java.util.List;
  * Created by wlrllr on 2017/11/9.
  */
 public class PicInfo {
-    @XmlField("Count")
+    @Alias("Count")
     private int count;
-    @XmlField("PicList")
+    @Alias("PicList")
     private List<Pic> list;
 
     public int getCount() {
@@ -29,9 +29,9 @@ public class PicInfo {
         this.list = list;
     }
 
-    @XmlField("item")
+    @Alias("item")
     class Pic {
-        @XmlField("PicMd5Sum")
+        @Alias("PicMd5Sum")
         private String picMd5Sum;
 
         public String getPicMd5Sum() {

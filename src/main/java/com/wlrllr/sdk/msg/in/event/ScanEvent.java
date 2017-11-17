@@ -1,15 +1,15 @@
 package com.wlrllr.sdk.msg.in.event;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 
 /**
  * Created by wlrllr on 2017/11/7.
  */
 public class ScanEvent extends BaseEvent {
 
-    @XmlField("EventKey")
+    @Alias("EventKey")
     private String eventKey;
-    @XmlField("Ticket")
+    @Alias("Ticket")
     private String ticket;
 
     public String getEventKey() {

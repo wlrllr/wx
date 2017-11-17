@@ -47,7 +47,7 @@
          <property name="enableSubPackages" value="false" />
      </javaClientGenerator>
         <!-- 指定数据库表 -->
-        <table domainObjectName="WxUser" tableName="WX_USER"/>
+        <table domainObjectName="WxApp" tableName="WX_APP"/>
         <!--<table domainObjectName="WxUserTag" tableName="WX_USER_TAG"/>
         <table domainObjectName="WxResponseMsg" tableName="WX_RESPONSE_MSG"/>-->
     </context>

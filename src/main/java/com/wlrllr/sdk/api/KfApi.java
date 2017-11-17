@@ -1,6 +1,8 @@
 package com.wlrllr.sdk.api;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wlrllr.sdk.api.model.JSONObj;
+import com.wlrllr.sdk.core.ThreadLocalParam;
 import com.wlrllr.sdk.util.HttpUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
@@ -19,15 +21,14 @@ public class KfApi extends BaseApi {
 
     /**
      * 添加客服帐号
-     * {"kf_account" : "test1@test","nickname" : "客服1","password" : "pswmd5",}
+     * {"kf_account" : "test","nickname" : "客服1"}
      *
      * @param account
      * @param nickName
-     * @param password
      * @return
      */
-    public Boolean addKf(String account, String nickName, String password) {
-        return operateKf(wxProperties.getAddkf(), account, nickName, password);
+    public Boolean addKf(String account, String nickName) {
+        return operateKf(wxProperties.getAddkf(), account, nickName);
     }
 
     /**
@@ -35,23 +36,22 @@ public class KfApi extends BaseApi {
      *
      * @param account
      * @param nickName
-     * @param password
      * @return
      */
-    public Boolean updateKf(String account, String nickName, String password) {
-        return operateKf(wxProperties.getUpdatekf(), account, nickName, password);
+    public Boolean updateKf(String account, String nickName) {
+        return operateKf(wxProperties.getUpdatekf(), account, nickName);
     }
 
     /**
      * 删除客服帐号
      */
-    public Boolean delKf(String account, String nickName, String password) {
-        return operateKf(wxProperties.getDeletekf(), account, nickName, password);
+    public Boolean delKf(String account, String nickName) {
+        return operateKf(wxProperties.getDeletekf(), account, nickName);
     }
 
-    private Boolean operateKf(String url, String account, String nickName, String password) {
+    private Boolean operateKf(String url, String account, String nickName) {
         JSONObject result = HttpUtils.post(fillUrlParam(url),
-                new JSONObj("kf_account", account).build("nickname", nickName).build("password", password));
+                new JSONObj("kf_account", account).build("nickname", nickName));
         return returnBoolean(result);
     }
 
@@ -80,7 +80,7 @@ public class KfApi extends BaseApi {
      * ]
      * }
      */
-    public JSONObject getKfList() {
+    public JSONObj getKfList() {
         return HttpUtils.get(fillUrlParam(wxProperties.getGetkflist()));
     }
 
@@ -93,7 +93,7 @@ public class KfApi extends BaseApi {
      * @param param     消息体
      * @return 具体返回什么通过测试才知道。。
      */
-    public JSONObject sendMsg(String openId, String type, String kfAccount, JSONObj param) {
+    public JSONObj sendMsg(String openId, String type, String kfAccount, JSONObj param) {
         JSONObj data = new JSONObj("touser", openId).build("msgtype", type).build(type, param);
         if (StringUtils.isNotBlank(kfAccount)) {
             data.build("customservice", new JSONObj("kf_account", kfAccount));
@@ -114,10 +114,24 @@ public class KfApi extends BaseApi {
      * @return
      */
     public Boolean typing(String touser, String command) {
-        JSONObject result = HttpUtils.post(fillUrlParam(wxProperties.getTyping())
+        JSONObj result = HttpUtils.post(fillUrlParam(wxProperties.getTyping())
                 , new JSONObj("touser", touser).build("msgtype", command));
         return returnBoolean(result);
     }
+
+
+    /**
+     * 创建会话
+     * @param account 公众号名称@test
+     * @param openId
+     * @return
+     */
+    public Boolean createSeesion(String account,String openId){
+        JSONObj param = new JSONObj("kf_account",account).build("openid",openId);
+        JSONObj result = HttpUtils.post(fillUrlParam(wxProperties.getCreateSession()),param);
+        return returnBoolean(result);
+    }
+
 
     public static JSONObj buildTextMsg(String content) {
         return new JSONObj("content", content);

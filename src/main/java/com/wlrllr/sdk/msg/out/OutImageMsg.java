@@ -1,11 +1,11 @@
 package com.wlrllr.sdk.msg.out;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.msg.Msg;
 
 public class OutImageMsg extends Msg {
 
-    @XmlField("Image")
+    @Alias("Image")
     private Image image;
 
     public Image getImage() {
@@ -21,8 +21,8 @@ public class OutImageMsg extends Msg {
         image.setMediaId(mediaId);
     }
 
-    class Image{
-        @XmlField("MediaId")
+    class Image {
+        @Alias("MediaId")
         private String mediaId;
 
         public String getMediaId() {

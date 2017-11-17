@@ -1,6 +1,6 @@
 package com.wlrllr.sdk.msg.out;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.msg.Msg;
 
 /**
@@ -8,7 +8,7 @@ import com.wlrllr.sdk.msg.Msg;
  */
 public class OutVideoMsg extends Msg {
 
-    @XmlField("Video")
+    @Alias("Video")
     private Video video;
 
     public Video getVideo() {
@@ -20,12 +20,11 @@ public class OutVideoMsg extends Msg {
     }
 
     /**
-     *
-     * @param mediaId 不能为空
+     * @param mediaId     不能为空
      * @param title
      * @param description
      */
-    public void addVideo(String mediaId,String title,String description) {
+    public void addVideo(String mediaId, String title, String description) {
         video = new Video();
         video.setMediaId(mediaId);
         video.setTitle(title);
@@ -34,11 +33,11 @@ public class OutVideoMsg extends Msg {
 
     class Video {
 
-        @XmlField("MediaId")
+        @Alias("MediaId")
         private String mediaId;
-        @XmlField("Title")
+        @Alias("Title")
         private String title;
-        @XmlField("Description")
+        @Alias("Description")
         private String description;
 
         public String getMediaId() {

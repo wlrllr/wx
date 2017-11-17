@@ -1,6 +1,6 @@
 package com.wlrllr.sdk.msg;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.util.XmlUtils;
 
 import java.io.Serializable;
@@ -10,20 +10,21 @@ import java.io.Serializable;
  */
 public abstract class Msg implements Serializable{
 
-    @XmlField("ToUserName")
+    @Alias("ToUserName")
     protected String toUser;
-    @XmlField("FromUserName")
+    @Alias("FromUserName")
     protected String fromUser;
-    @XmlField("CreateTime")
+    @Alias("CreateTime")
     protected Long createTime;
-    @XmlField("MsgType")
+    @Alias("MsgType")
     protected String msgType;
 
     /**
      * 请求消息对象转换成响应消息对象
+     *
      * @param msg
      */
-    protected void covert(Msg msg){
+    protected void covert(Msg msg) {
         toUser = msg.getFromUser();
         fromUser = msg.getToUser();
         createTime = now();
@@ -63,7 +64,7 @@ public abstract class Msg implements Serializable{
     }
 
     public String toXml(){
-       return XmlUtils.messageToXML(this);
+        return XmlUtils.messageToXML(this);
     }
 
     public Long now() {

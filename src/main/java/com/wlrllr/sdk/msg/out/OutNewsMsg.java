@@ -1,6 +1,6 @@
 package com.wlrllr.sdk.msg.out;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.msg.Msg;
 import com.wlrllr.sdk.util.XmlUtils;
 
@@ -8,9 +8,9 @@ import java.util.List;
 
 public class OutNewsMsg extends Msg {
 
-    @XmlField("ArticleCount")
+    @Alias("ArticleCount")
     private Integer count;
-    @XmlField("Articles")
+    @Alias("Articles")
     private List<Article> articles;
 
     public Integer getCount() {

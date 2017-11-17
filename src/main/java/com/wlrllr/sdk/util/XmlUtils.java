@@ -7,11 +7,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.msg.out.Article;
 import com.wlrllr.sdk.msg.out.OutImageMsg;
 import com.wlrllr.sdk.msg.out.OutNewsMsg;
-import com.wlrllr.util.StringUtils;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,14 +71,14 @@ public class XmlUtils {
         }
     });
 
-    public static String messageToXML(Object text,Class... clazzs) {
+    public static String messageToXML(Object text, Class... clazzs) {
         if (text == null) {
             return null;
         }
         xstream.myAlias("xml", text.getClass());
-        if(clazzs != null){
-            for(Class clazz : clazzs){
-                XmlField annotation = (XmlField)clazz.getAnnotation(XmlField.class);
+        if (clazzs != null) {
+            for (Class clazz : clazzs) {
+                Alias annotation = (Alias) clazz.getAnnotation(Alias.class);
                 xstream.myAlias(annotation.value(), clazz);
             }
         }
@@ -88,7 +87,7 @@ public class XmlUtils {
 
     public static void main(String[] args) {
         OutImageMsg imageMsg = new OutImageMsg();
-        imageMsg.addImage("123213" );
+        imageMsg.addImage("123213");
         imageMsg.setCreateTime(System.currentTimeMillis());
         imageMsg.setFromUser("fromUser");
         imageMsg.setToUser("toUser");
@@ -107,7 +106,7 @@ public class XmlUtils {
         article.setUrl("url");
         list.add(article);
         newsMsg.setArticles(list);
-       // xstream.myAlias("item", Article.class);
+        // xstream.myAlias("item", Article.class);
         System.out.print(newsMsg.toXml());
     }
 }
@@ -122,7 +121,7 @@ class MyXStream extends XStream {
         }
         for (; type != Object.class; type = type.getSuperclass()) {
             for (Field field : type.getDeclaredFields()) {
-                XmlField annotation = field.getAnnotation(XmlField.class);
+                Alias annotation = field.getAnnotation(Alias.class);
                 if (annotation != null && StringUtils.isNotBlank(annotation.value())) {
                     xmlNames.put(field.getName(), annotation.value());
                 }

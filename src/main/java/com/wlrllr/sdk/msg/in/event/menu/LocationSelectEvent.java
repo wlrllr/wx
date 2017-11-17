@@ -1,6 +1,6 @@
 package com.wlrllr.sdk.msg.in.event.menu;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.msg.in.event.BaseEvent;
 
 /**
@@ -8,9 +8,9 @@ import com.wlrllr.sdk.msg.in.event.BaseEvent;
  */
 public class LocationSelectEvent extends BaseEvent {
 
-    @XmlField("EventKey")
+    @Alias("EventKey")
     private String eventKey;
-    @XmlField("SendLocationInfo")
+    @Alias("SendLocationInfo")
     private SendLocationInfo locationInfo;
 
     public String getEventKey() {
@@ -29,16 +29,16 @@ public class LocationSelectEvent extends BaseEvent {
         this.locationInfo = locationInfo;
     }
 
-    class SendLocationInfo{
-        @XmlField("Location_X")
+    class SendLocationInfo {
+        @Alias("Location_X")
         private String locationX;
-        @XmlField("Location_Y")
+        @Alias("Location_Y")
         private String locationY;
-        @XmlField("Scale")
+        @Alias("Scale")
         private String scale;
-        @XmlField("Label")
+        @Alias("Label")
         private String label;
-        @XmlField("Poiname")
+        @Alias("Poiname")
         private String poiname;
 
         public String getLocationX() {

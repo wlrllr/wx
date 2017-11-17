@@ -1,16 +1,15 @@
 package com.wlrllr.sdk.msg.in;
 
-import com.wlrllr.sdk.core.XmlField;
-import com.wlrllr.sdk.msg.Msg;
+import com.wlrllr.sdk.core.Alias;
 
 /**
  * Created by wlrllr on 2017/11/7.
  */
 public class ImageMsg extends BaseMsg {
 
-    @XmlField("PicUrl")
+    @Alias("PicUrl")
     private String picUrl;
-    @XmlField("MediaId")
+    @Alias("MediaId")
     private String mediaId;
 
     public String getPicUrl() {

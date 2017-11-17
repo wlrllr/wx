@@ -20,4 +20,6 @@ public class EventType {
     public static final String PIC_SYSPHOTO = "pic_sysphoto"; //系统拍照发图
     public static final String SCAN_CODE_WAIT_MSG = "scancode_waitmsg";//扫码带提示
     public static final String SCAN_CODE_PUSH = "scancode_push"; //扫码推事件
+    public static final String MASS_SEND_JOB_FINISH = "MASSSENDJOBFINISH"; //群发任务完成通知
+
 }

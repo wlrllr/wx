@@ -1,6 +1,6 @@
 package com.wlrllr.sdk.msg.out;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.msg.Msg;
 
 /**
@@ -8,7 +8,7 @@ import com.wlrllr.sdk.msg.Msg;
  */
 public class OutVoiceMsg extends Msg {
 
-    @XmlField("Voice")
+    @Alias("Voice")
     private Voice voice;
 
     public Voice getVoice() {
@@ -20,7 +20,6 @@ public class OutVoiceMsg extends Msg {
     }
 
     /**
-     *
      * @param mediaId 不能为空
      */
     public void addVoice(String mediaId) {
@@ -29,7 +28,7 @@ public class OutVoiceMsg extends Msg {
     }
 
     class Voice {
-        @XmlField("MediaId")
+        @Alias("MediaId")
         private String mediaId;
 
         public String getMediaId() {

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <properties>
-        <property name="dialectClass" value="com.wlrllr.core.dialect.MySql5Dialect"/>
+        <property name="dialectClass" value="com.wlrllr.sdk.core.dialect.MySql5Dialect"/>
     </properties>
 
     <!-- 配置mybatis的缓存，延迟加载等等一系列属性 -->
@@ -66,11 +66,11 @@
     </typeAliases>
     <plugins>
 		<plugin
-			interceptor="com.wlrllr.core.mybatis.PaginationResultSetHandlerInterceptor" />
+			interceptor="com.wlrllr.sdk.core.mybatis.PaginationResultSetHandlerInterceptor" />
 		<plugin
-			interceptor="com.wlrllr.core.mybatis.PaginationStatementHandlerInterceptor" />
+			interceptor="com.wlrllr.sdk.core.mybatis.PaginationStatementHandlerInterceptor" />
 		<plugin
-			interceptor="com.wlrllr.core.mybatis.SQLFuzzyQueryHandlerInterceptor" />
+			interceptor="com.wlrllr.sdk.core.mybatis.SQLFuzzyQueryHandlerInterceptor" />
 	</plugins>
 
 

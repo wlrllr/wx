@@ -1,13 +1,12 @@
 package com.wlrllr.sdk.msg;
 
-import com.alibaba.fastjson.JSONObject;
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.msg.in.*;
 import com.wlrllr.sdk.msg.in.event.*;
 import com.wlrllr.sdk.msg.in.event.menu.*;
 import com.wlrllr.sdk.type.EventType;
 import com.wlrllr.sdk.type.MsgType;
-import com.wlrllr.util.StringUtils;
+import com.wlrllr.sdk.util.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -15,6 +14,7 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -25,6 +25,15 @@ import java.util.List;
 public class MsgParser {
 
     private static Logger logger = LoggerFactory.getLogger(MsgParser.class);
+
+    public static Msg parse(String xmlStr) {
+        try {
+            return parse(new SAXReader().read(new ByteArrayInputStream(xmlStr.getBytes())));
+        } catch (DocumentException e) {
+            logger.error(">>>>>>>>>解析xml异常<<<<<<<", e);
+        }
+        return null;
+    }
 
     public static Msg parse(InputStream inputStream) {
         try {
@@ -58,7 +67,7 @@ public class MsgParser {
                     element = root.element("Event");
                     return parseEvent(elementList, element.getText());
                 default:
-                    logger.warn(">>>>>>>为解析到消息类型:msgType:[{}],content:[{}]<<<<<<<<", msgType,root.getData());
+                    logger.warn(">>>>>>>为解析到消息类型:msgType:[{}],content:[{}]<<<<<<<<", msgType, root.getData());
             }
         }
         return null;
@@ -109,6 +118,9 @@ public class MsgParser {
             case EventType.SCAN_CODE_WAIT_MSG:
                 clazz = ScanWaitEvent.class;
                 break;
+            case EventType.MASS_SEND_JOB_FINISH:
+                clazz = MassSendJobEvent.class;
+                break;
             default:
                 logger.warn(">>>>>>>为解析到消息类型:EventType:[{}],content:[{}]<<<<<<<<", event);
         }
@@ -129,7 +141,7 @@ public class MsgParser {
             if (elementList != null) {
                 for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
                     for (Field field : clazz.getDeclaredFields()) {
-                        XmlField annotation = field.getAnnotation(XmlField.class);
+                        Alias annotation = field.getAnnotation(Alias.class);
                         if (annotation != null && StringUtils.isNotBlank(annotation.value())) {
                             for (Element element : elementList) {
                                 if (annotation.value().equals(element.getName())) {

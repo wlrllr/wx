@@ -1,6 +1,6 @@
 package com.wlrllr.sdk.msg.in.event.menu;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.msg.in.event.BaseEvent;
 
 /**
@@ -8,9 +8,9 @@ import com.wlrllr.sdk.msg.in.event.BaseEvent;
  */
 public class ScanPushEvent extends BaseEvent {
 
-    @XmlField("EventKey")
+    @Alias("EventKey")
     private String eventKey;
-    @XmlField("ScanCodeInfo")
+    @Alias("ScanCodeInfo")
     private ScanCodeInfo codeInfo;
 
     public String getEventKey() {

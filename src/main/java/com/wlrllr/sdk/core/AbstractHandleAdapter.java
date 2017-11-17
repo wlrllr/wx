@@ -4,6 +4,8 @@ import com.wlrllr.sdk.msg.in.*;
 import com.wlrllr.sdk.msg.in.event.*;
 import com.wlrllr.sdk.msg.in.event.menu.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 对接收到的所有消息和事件做默认处理
  * Created by wlrllr on 2017/11/8.
@@ -77,6 +79,7 @@ public class AbstractHandleAdapter extends AbstractHandler {
 
     /**
      * 包含三种事件pic_weixin，pic_photo_or_album，pic_sysphoto
+     *
      * @param picEvent
      * @return
      */
@@ -95,7 +98,16 @@ public class AbstractHandleAdapter extends AbstractHandler {
         return defaultDo();
     }
 
-    public String defaultDo(){
+    @Override
+    protected String doMassSendJobEvent(MassSendJobEvent massSendJobEvent) {
+        return defaultDo();
+    }
+
+    public void customerServerUrl(HttpServletRequest request) {
+
+    }
+
+    public String defaultDo() {
         return "";
     }
 }

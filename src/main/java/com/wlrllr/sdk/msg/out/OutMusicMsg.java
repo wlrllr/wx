@@ -1,6 +1,6 @@
 package com.wlrllr.sdk.msg.out;
 
-import com.wlrllr.sdk.core.XmlField;
+import com.wlrllr.sdk.core.Alias;
 import com.wlrllr.sdk.msg.Msg;
 
 /**
@@ -8,19 +8,18 @@ import com.wlrllr.sdk.msg.Msg;
  */
 public class OutMusicMsg extends Msg {
 
-    @XmlField("Music")
+    @Alias("Music")
     private Music music;
 
 
     /**
-     *
-     * @param mediaId ThumbMediaId 不能为空
-     * @param title Title
+     * @param mediaId     ThumbMediaId 不能为空
+     * @param title       Title
      * @param description Description
-     * @param url MusicUrl
-     * @param hqUrl HQMusicUrl
+     * @param url         MusicUrl
+     * @param hqUrl       HQMusicUrl
      */
-    public void addVideo(String mediaId,String title,String description,String url,String hqUrl) {
+    public void addVideo(String mediaId, String title, String description, String url, String hqUrl) {
         music = new Music();
         music.setMediaId(mediaId);
         music.setTitle(title);
@@ -30,15 +29,15 @@ public class OutMusicMsg extends Msg {
     }
 
     class Music {
-        @XmlField("ThumbMediaId")
+        @Alias("ThumbMediaId")
         private String mediaId;
-        @XmlField("Title")
+        @Alias("Title")
         private String title;
-        @XmlField("Description")
+        @Alias("Description")
         private String description;
-        @XmlField("MusicUrl")
+        @Alias("MusicUrl")
         private String url;
-        @XmlField("HQMusicUrl")
+        @Alias("HQMusicUrl")
         private String hqUrl;
 
         public String getMediaId() {

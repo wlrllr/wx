@@ -1,20 +1,19 @@
 package com.wlrllr.sdk.msg.in;
 
-import com.wlrllr.sdk.core.XmlField;
-import com.wlrllr.sdk.msg.Msg;
+import com.wlrllr.sdk.core.Alias;
 
 /**
  * Created by wlrllr on 2017/11/7.
  */
 public class LocationMsg extends BaseMsg {
 
-    @XmlField("Location_X")
+    @Alias("Location_X")
     private String locationX;
-    @XmlField("Location_Y")
+    @Alias("Location_Y")
     private String locationY;
-    @XmlField("Scale")
+    @Alias("Scale")
     private String scale;
-    @XmlField("Label")
+    @Alias("Label")
     private String label;
 
     public String getLocationX() {
